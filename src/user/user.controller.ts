@@ -23,7 +23,6 @@ export class UserController {
   @Post("/users/login")
   @UsePipes(new ValidationPipe())
   async loginUser(@Body("user") loginUserDto: LoginUserDto): Promise<UserTypeLoginResponseInterface> {
-    console.log(loginUserDto)
     const user = await this.userService.loginUser(loginUserDto);
     return this.userService.loginUserResponse(user);
   }

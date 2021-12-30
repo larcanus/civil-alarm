@@ -9,7 +9,6 @@ import { UserResponseInterface, UserTypeLoginResponseInterface } from "@app/type
 import { LoginUserDto } from "@app/user/dto/loginUser.dto";
 import { compare } from "bcryptjs";
 import { UpdateUserDto } from "@app/user/dto/updateUser.dto";
-import { updateOutput } from "ts-jest";
 
 @Injectable()
 export class UserService {
