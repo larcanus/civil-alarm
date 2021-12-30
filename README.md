@@ -37,7 +37,7 @@
    }
    ```
 
-<br/><br/>
+<br/>
 
 2. for login user:`host/users/login`
    <br/> **request**
@@ -66,7 +66,7 @@
 
 <br/>
 
-#### GET:`host/user`
+#### GET: `host/user`
 
 1. for get current user:
    <br/> **request**
@@ -109,8 +109,8 @@
    ```
    {
       "user":{
-         .? - "name":"name",
-         .? - "email":"name@mail.jo",
+         .? - "name":"new name",
+         .? - "email":"new name@mail.jo",
       }
    }
    ```
