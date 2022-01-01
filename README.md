@@ -111,6 +111,7 @@
       "user":{
          .? - "name":"new name",
          .? - "email":"new name@mail.jo",
+         .? - "password":"new password",
       }
    }
    ```
