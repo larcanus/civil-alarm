@@ -106,12 +106,13 @@
    `Authorization`:`token <user-token>`
    <br/>
    <br/> where - *body*, type - `<json>`
+   <br/> All fields are optionals
    ```
    {
       "user":{
-         .? - "name":"new name",
-         .? - "email":"new name@mail.jo",
-         .? - "password":"new password",
+         "name":"new name",
+         "email":"new name@mail.jo",
+         "password":"new password",
       }
    }
    ```
