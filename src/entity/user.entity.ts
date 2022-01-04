@@ -18,6 +18,6 @@ export class UserEntity {
         this.password = await hash( this.password, 10 );
     }
 
-    @OneToMany( () => FilterEntity, filter => filter.user, )
-    filters: FilterEntity[];
+    @OneToMany( () => FilterEntity, filters => filters.user, )
+    filters: FilterEntity;
 }

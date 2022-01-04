@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { UserEntity } from "@app/entity/user.entity";
-import { CreateFilterDto } from "@app/filter/dto/createFilter.dto";
+import { FilterDto } from "@app/filter/dto/filter.dto";
 import { FilterEntity } from "@app/entity/filter.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -11,11 +11,24 @@ export class FilterService {
         @InjectRepository( FilterEntity ) private readonly filterRepository: Repository<FilterEntity> ) {
     }
 
-    async createFilter( currentUser: UserEntity, createFilterDto: CreateFilterDto ): Promise<FilterEntity> {
-        const filter = new FilterEntity();
-        Object.assign( filter, createFilterDto );
+    async updateFilter( currentfilter: FilterEntity, newFilter: FilterDto ): Promise<FilterEntity> {
+        Object.assign( currentfilter, newFilter );
+        return await this.filterRepository.save( currentfilter );
+    }
 
+    async createFilter( currentUser: UserEntity, filterDto: FilterDto ): Promise<FilterEntity> {
+        const filter = new FilterEntity();
+        Object.assign( filter, filterDto );
         filter.user = currentUser;
-        return await this.filterRepository.save(filter);
+        return await this.filterRepository.save( filter );
+    }
+
+    async findFilterByUserId( userId: string ): Promise<FilterEntity | null> {
+        const filter = await this.filterRepository.findOne( { where: { user:userId } } );
+        if ( filter && filter.id ) {
+            return filter;
+        } else {
+            return null;
+        }
     }
 }

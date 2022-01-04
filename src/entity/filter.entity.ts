@@ -1,4 +1,4 @@
-import { BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeUpdate, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from '@app/entity/user.entity';
 
 @Entity( { name: 'filters' } )
@@ -6,15 +6,23 @@ export class FilterEntity {
     @PrimaryGeneratedColumn()
     id: string;
 
-    @ManyToOne( () => UserEntity, user => user.filters,
-        { cascade: [ 'remove', 'insert', 'update' ] } )
-    user: UserEntity;
+    @Column( { default: '' } )
+    name_1: string;
 
     @Column( { default: '' } )
-    name: string;
+    filter_1: string;
+
+    @Column( { type: 'boolean' , default: true } )
+    active_1: string;
 
     @Column( { default: '' } )
-    filter: string;
+    name_2: string;
+
+    @Column( { default: '' } )
+    filter_2: string;
+    
+    @Column( { type: 'boolean' , default: true }  )
+    active_2: string;
 
     @Column( { type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' } )
     created_at: Date;
@@ -26,4 +34,8 @@ export class FilterEntity {
     updateTimestamp() {
         this.update_at = new Date();
     }
+
+    @ManyToOne( () => UserEntity, user => user.filters,
+        { cascade: [ 'remove', 'insert', 'update' ] } )
+    user: UserEntity;
 }

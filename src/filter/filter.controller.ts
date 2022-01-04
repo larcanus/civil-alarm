@@ -1,18 +1,24 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Put, UseGuards } from "@nestjs/common";
 import { FilterService } from "@app/filter/filter.service";
 import { AuthGuard } from "@app/guards/auth.guard";
 import { User } from "@app/decorators/user.decorator";
 import { UserEntity } from "@app/entity/user.entity";
-import { CreateFilterDto } from "@app/filter/dto/createFilter.dto";
+import { FilterDto } from "@app/filter/dto/filter.dto";
+import { FilterEntity } from "@app/entity/filter.entity";
 
 @Controller( 'filters' )
 export class FilterController {
     constructor( private readonly filterService: FilterService ) {
     }
 
-    @Post()
+    @Put()
     @UseGuards( AuthGuard )
-    async createFilter( @User() currentUser: UserEntity, @Body( 'filter' ) createFilterDto: CreateFilterDto ): Promise<any> {
-        return this.filterService.createFilter( currentUser, createFilterDto );
+    async createOrUpdateFilter( @User() currentUser: UserEntity, @Body( 'filter' ) filterDto: FilterDto ): Promise<FilterEntity> {
+        const currentFilter = await this.filterService.findFilterByUserId( currentUser.id );
+        if ( currentFilter ) {
+            return this.filterService.updateFilter( currentFilter, filterDto );
+        } else {
+            return this.filterService.createFilter( currentUser, filterDto );
+        }
     }
 }
