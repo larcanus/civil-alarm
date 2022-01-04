@@ -31,7 +31,7 @@
           "name"    : "name",
           "email"   : "name@mail.jo",
           "password": "hash-psw",
-          "id"      : unique-number <smallint>,
+          "id"      : integer,
           "token"   : "unique-value"
       }
    }
@@ -56,7 +56,7 @@
    ```
    {
       "user": {
-         "id"   : unique-number <smallint>,
+         "id"   : integer,
          "name" : "name",
          "email": "name@mail.jo",
          "token": "unique-value"
@@ -87,7 +87,7 @@
    ```
    {
       "user": {
-          "id"      : unique-number <smallint>,
+          "id"      : integer,
           "name"    : "name",
           "email"   : "name@mail.jo",
           "token"   : "unique-value"
@@ -120,7 +120,7 @@
    ```
    {
       "user": {
-          "id"      : unique-number <smallint>,
+          "id"      : integer,
           "name"    : "name",
           "email"   : "name@mail.jo",
           "token"   : "unique-value"
@@ -131,3 +131,39 @@
    
 #### PUT: `host/filters`
 1. for get update or create filters
+<br/> **request**
+   <br/> where - *Headers*, type - `KEY:TOKEN`
+   <br/>
+   `Authorization`:`token <user-token>`
+   <br/>
+   <br/> where - *body*, type - `<json>`
+   <br/> All fields are optionals
+   ```
+   {
+      "filters": {
+         "name_1"   : string,
+         "name_2"   : string,
+         "filter_1" : string,
+         "filter_2" : string
+         "active_1" : boolean
+         "active_2" : boolean
+      }
+   }
+   ```
+   **resolve**
+   ```
+   {
+      "filters": {
+         "id"         : integer,
+         "name_1"     : string,
+         "name_2"     : string,
+         "filter_1"   : string,
+         "filter_2"   : string
+         "active_1"   : boolean
+         "active_2"   : boolean
+         "created_at" : timestamp
+         "update_at"  : timestamp
+         "userId"     : integer
+      }
+   }
+   ```

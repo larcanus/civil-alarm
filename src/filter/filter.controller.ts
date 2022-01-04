@@ -13,7 +13,7 @@ export class FilterController {
 
     @Put()
     @UseGuards( AuthGuard )
-    async createOrUpdateFilter( @User() currentUser: UserEntity, @Body( 'filter' ) filterDto: FilterDto ): Promise<FilterEntity> {
+    async createOrUpdateFilter( @User() currentUser: UserEntity, @Body( 'filters' ) filterDto: FilterDto ): Promise<FilterEntity> {
         const currentFilter = await this.filterService.findFilterByUserId( currentUser.id );
         if ( currentFilter ) {
             return this.filterService.updateFilter( currentFilter, filterDto );
