@@ -128,3 +128,6 @@
    }
    ```
    *resolve update token*
+   
+#### PUT: `host/filters`
+1. for get update or create filters
