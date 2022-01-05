@@ -75,6 +75,7 @@ export class UserService {
                 name: user.name,
                 email: user.email,
                 filters: user.filters,
+                notices: user.notices,
                 token: this.createJWToken( user )
             }
         };

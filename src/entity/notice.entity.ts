@@ -6,6 +6,9 @@ export class NoticeEntity {
     @PrimaryGeneratedColumn()
     id: string
 
+    @Column()
+    filter_name: string;
+
     @Column( { type: 'jsonb', array: false } )
     documents!: string;
 

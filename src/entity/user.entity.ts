@@ -20,4 +20,7 @@ export class UserEntity {
 
     @OneToMany( () => FilterEntity, filters => filters.user, )
     filters: FilterEntity;
+
+    @OneToMany( () => FilterEntity, notices => notices.user, )
+    notices: FilterEntity;
 }

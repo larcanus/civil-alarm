@@ -34,19 +34,19 @@ export class NoticeService {
             const { user } = filters;
 
             if ( filters.active_1 ) {
-                const { filter_1, subject_1 } = filters;
+                const { filter_1, subject_1, name_1 } = filters;
                 ( await this.getNoticeByFilter( filter_1, subject_1 ) ).subscribe(
                     ( response ) => {
-                        this.strokeNotice( response.data.searchResult, user );
+                        this.strokeNotice( response.data.searchResult, user, name_1 );
                     },
                 )
             }
 
             if ( filters.active_2 ) {
-                const { filter_2, subject_2 } = filters;
+                const { filter_2, subject_2, name_2 } = filters;
                 ( await this.getNoticeByFilter( filter_2, subject_2 ) ).subscribe(
                     ( response ) => {
-                        this.strokeNotice( response.data.searchResult, user );
+                        this.strokeNotice( response.data.searchResult, user, name_2 );
                     },
                 )
             }
@@ -127,13 +127,14 @@ export class NoticeService {
             } );
     }
 
-    async strokeNotice( searchResult: any, currentUser: UserEntity ) {
+    async strokeNotice( searchResult: any, currentUser: UserEntity, nameFilter: string ) {
         const newNotice = new NoticeEntity();
         if ( searchResult && searchResult?.documents && searchResult?.documents.length > 0 ) {
             newNotice.documents = JSON.stringify( searchResult.documents );
         } else {
             newNotice.documents = '';
         }
+        newNotice.filter_name = nameFilter;
         newNotice.user = currentUser;
         await this.putNotice( newNotice );
     }
