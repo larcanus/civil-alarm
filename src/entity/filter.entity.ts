@@ -12,6 +12,9 @@ export class FilterEntity {
     @Column( { default: '' } )
     filter_1: string;
 
+    @Column( { default: '' } )
+    subject_1: string;
+
     @Column( { type: 'boolean' , default: true } )
     active_1: string;
 
@@ -20,6 +23,9 @@ export class FilterEntity {
 
     @Column( { default: '' } )
     filter_2: string;
+
+    @Column( { default: '' } )
+    subject_2: string;
     
     @Column( { type: 'boolean' , default: true }  )
     active_2: string;

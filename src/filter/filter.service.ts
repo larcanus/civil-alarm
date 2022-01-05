@@ -11,9 +11,9 @@ export class FilterService {
         @InjectRepository( FilterEntity ) private readonly filterRepository: Repository<FilterEntity> ) {
     }
 
-    async updateFilter( currentfilter: FilterEntity, newFilter: FilterDto ): Promise<FilterEntity> {
-        Object.assign( currentfilter, newFilter );
-        return await this.filterRepository.save( currentfilter );
+    async updateFilter( currentFilter: FilterEntity, newFilter: FilterDto ): Promise<FilterEntity> {
+        Object.assign( currentFilter, newFilter );
+        return await this.filterRepository.save( currentFilter );
     }
 
     async createFilter( currentUser: UserEntity, filterDto: FilterDto ): Promise<FilterEntity> {
@@ -24,7 +24,7 @@ export class FilterService {
     }
 
     async findFilterByUserId( userId: string ): Promise<FilterEntity | null> {
-        const filter = await this.filterRepository.findOne( { where: { user:userId } } );
+        const filter = await this.filterRepository.findOne( { where: { user: userId } } );
         if ( filter && filter.id ) {
             return filter;
         } else {
