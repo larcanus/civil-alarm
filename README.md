@@ -28,7 +28,7 @@
           "name"    : string
           "email"   : "name@mail.jo"
           "password": "hash-psw"
-          "id"      : integer
+          "id"      : uuid
           "token"   : "unique-value"
       }
    }
@@ -53,12 +53,12 @@
    ```
    {
       "user": {
-         "id"      : integer,
+         "id"      : uuid,
          "name"    : string,
          "email"   : "name@mail.jo",
          "filters" : [
             {
-               "id"        : integer
+               "id"        : uuid
                "name_1"    : string
                "filter_1"  : string
                "subject_1" : string
@@ -90,13 +90,13 @@
    ```
    {
       "user": {
-         "id"      : integer
+         "id"      : uuid
          "name"    : string
          "email"   : "name@mail.jo"
          "password": "hash-psw"
          "filters" : [
             {
-               "id"        : integer
+               "id"        : uuid
                "name_1"    : string
                "filter_1"  : string
                "subject_1" : string
@@ -128,7 +128,7 @@
    ```
    {
       "notice": {
-         "id"         : integer
+         "id"         : uuid
          "filter_name": string
          "documents"  : jsonb
          "created_at" : timestamp        
@@ -160,7 +160,7 @@
    ```
    {
       "user": {
-          "id"   : integer
+          "id"   : uuid
           "name" : "name"
           "email": "name@mail.jo"
           "token": "unique-value"
@@ -197,7 +197,7 @@
    ```
    {
       "filters": {
-         "id"        : integer
+         "id"        : uuid
          "name_1"    : string
          "name_2"    : string
          "filter_1"  : string

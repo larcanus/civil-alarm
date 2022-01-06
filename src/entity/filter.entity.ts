@@ -3,7 +3,7 @@ import { UserEntity } from '@app/entity/user.entity';
 
 @Entity( { name: 'filters' } )
 export class FilterEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn( 'uuid' )
     id: string;
 
     @Column( { default: '' } )
@@ -42,6 +42,6 @@ export class FilterEntity {
     }
 
     @ManyToOne( () => UserEntity, user => user.filters,
-        { cascade: [ 'remove', 'insert', 'update' ] } )
+        { onDelete: 'CASCADE' } )
     user: UserEntity;
 }

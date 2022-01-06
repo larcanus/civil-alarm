@@ -6,7 +6,8 @@ const config: ConnectionOptions = {
     port: 5432,
     username: 'admin',
     password: '100',
-    database: 'civiltest',
+    database: 'civilalarm',
+    schema: 'production',
     synchronize: false,
     logging: false,
     entities: [
