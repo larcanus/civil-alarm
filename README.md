@@ -15,9 +15,9 @@
    ```
    {
       "user":{
-         "name":"name",
-         "email":"name@mail.jo",
-         "password":"any"
+         "name"    : string
+         "email"   : "name@mail.jo"
+         "password": any
       }
    }
    ```
@@ -25,10 +25,10 @@
    ```
    {
       "user": {
-          "name"    : "name",
-          "email"   : "name@mail.jo",
-          "password": "hash-psw",
-          "id"      : integer,
+          "name"    : string
+          "email"   : "name@mail.jo"
+          "password": "hash-psw"
+          "id"      : integer
           "token"   : "unique-value"
       }
    }
@@ -42,8 +42,8 @@
    ```
    {
       "user":{
-         "email"   :"name@mail.jo",
-         "password":"unique-value"
+         "email"   : "name@mail.jo"
+         "password": "unique-value"
       }
    }
    ```
@@ -54,20 +54,20 @@
    {
       "user": {
          "id"      : integer,
-         "name"    : "name",
+         "name"    : string,
          "email"   : "name@mail.jo",
          "filters" : [
             {
-               "id"        : integer,
-               "name_1"    : string,
-               "filter_1"  : string,
-               "subject_1" : string,
-               "active_1"  : boolean,
-               "name_2"    : string,
-               "filter_2"  : string,
-               "subject_2" : string,
-               "active_2"  : boolean,
-               "created_at": timestapm,
+               "id"        : integer
+               "name_1"    : string
+               "filter_1"  : string
+               "subject_1" : string
+               "active_1"  : boolean
+               "name_2"    : string
+               "filter_2"  : string
+               "subject_2" : string
+               "active_2"  : boolean
+               "created_at": timestapm
                "update_at" : timestapm
             }
          ],
@@ -90,26 +90,26 @@
    ```
    {
       "user": {
-         "id"      : integer,
-         "name"    : "name",
-         "email"   : "name@mail.jo",
-         "password": "hash-psw",
+         "id"      : integer
+         "name"    : string
+         "email"   : "name@mail.jo"
+         "password": "hash-psw"
          "filters" : [
             {
-               "id"        : integer,
-               "name_1"    : string,
-               "filter_1"  : string,
-               "subject_1" : string,
-               "active_1"  : boolean,
-               "name_2"    : string,
-               "filter_2"  : string,
-               "subject_2" : string,
-               "active_2"  : boolean,
-               "created_at": timestapm,
+               "id"        : integer
+               "name_1"    : string
+               "filter_1"  : string
+               "subject_1" : string
+               "active_1"  : boolean
+               "name_2"    : string
+               "filter_2"  : string
+               "subject_2" : string
+               "active_2"  : boolean
+               "created_at": timestapm
                "update_at" : timestapm
             }
           ],
-          "token"   : "unique-value"
+          "token": "unique-value"
       }
    }
    ```
@@ -128,10 +128,10 @@
    ```
    {
       "notice": {
-         "id"          : integer
-         "filter_name" : string
-         "documents"   : jsonb
-         "created_at"  : timestamp        
+         "id"         : integer
+         "filter_name": string
+         "documents"  : jsonb
+         "created_at" : timestamp        
       }
    }
    ```
@@ -150,9 +150,9 @@
    ```
    {
       "user":{
-         "name":"new name",
-         "email":"new name@mail.jo",
-         "password":"new password",
+         "name"    : "new name"
+         "email"   : "new name@mail.jo"
+         "password": "new password"
       }
    }
    ```
@@ -160,10 +160,10 @@
    ```
    {
       "user": {
-          "id"      : integer,
-          "name"    : "name",
-          "email"   : "name@mail.jo",
-          "token"   : "unique-value"
+          "id"   : integer
+          "name" : "name"
+          "email": "name@mail.jo"
+          "token": "unique-value"
       }
    }
    ```
@@ -182,9 +182,9 @@
    ```
    {
       "filters": {
-         "name_1"   : string,
-         "name_2"   : string,
-         "filter_1" : string,
+         "name_1"   : string
+         "name_2"   : string
+         "filter_1" : string
          "filter_2" : string
          "subject_1": string
          "subject_2": string
@@ -197,17 +197,17 @@
    ```
    {
       "filters": {
-         "id"         : integer
-         "name_1"     : string
-         "name_2"     : string
-         "filter_1"   : string
-         "filter_2"   : string
-         "active_1"   : boolean
-         "active_2"   : boolean
-         "subject_1"  : string
-         "subject_2"  : string
-         "created_at" : timestamp
-         "update_at"  : timestamp
+         "id"        : integer
+         "name_1"    : string
+         "name_2"    : string
+         "filter_1"  : string
+         "filter_2"  : string
+         "active_1"  : boolean
+         "active_2"  : boolean
+         "subject_1" : string
+         "subject_2" : string
+         "created_at": timestamp
+         "update_at" : timestamp
       }
    }
    ```
