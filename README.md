@@ -116,6 +116,27 @@
    *resolve update token*
    <br/>
 
+#### GET: `host/notices`
+
+1. for get ten latest user notices:
+   <br/> **request**
+   <br/> where - *Headers*, type - `KEY:TOKEN`
+   <br/>
+   `Authorization`:`token <user-token>`
+   
+   **resolve**
+   ```
+   {
+      "notice": {
+         "id"          : integer
+         "filter_name" : string
+         "documents"   : jsonb
+         "created_at"  : timestamp        
+      }
+   }
+   ```
+   <br/>
+
 #### PUT: `host/user`
 
 1. for get update user:
@@ -149,6 +170,7 @@
    *resolve update token*
    
 #### PUT: `host/filters`
+
 1. for get update or create filters
 <br/> **request**
    <br/> where - *Headers*, type - `KEY:TOKEN`
