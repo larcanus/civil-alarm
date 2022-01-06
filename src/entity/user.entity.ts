@@ -4,12 +4,15 @@ import { FilterEntity } from "@app/entity/filter.entity";
 
 @Entity( { name: 'users' } )
 export class UserEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn( 'uuid' )
     id: string;
+
     @Column()
     name: string;
+
     @Column()
     email: string;
+
     @Column()
     password: string;
 
