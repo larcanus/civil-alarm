@@ -5,10 +5,11 @@ import { HttpModule } from "@nestjs/axios";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { FilterEntity } from "@app/entity/filter.entity";
 import { NoticeEntity } from "@app/entity/notice.entity";
+import { NoticeController } from "@app/notice/notice.controller";
 
 @Module( {
     imports: [ HttpModule,ScheduleModule.forRoot(),TypeOrmModule.forFeature( [ FilterEntity, NoticeEntity ] ) ],
-    controllers: [],
+    controllers: [ NoticeController ],
     providers: [ NoticeService ],
 } )
 

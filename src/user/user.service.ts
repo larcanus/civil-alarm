@@ -30,7 +30,7 @@ export class UserService {
     }
 
     async loginUser( loginUserDto: LoginUserDto ): Promise<UserEntity> {
-        const user = await this.usersRepository.findOne( { email: loginUserDto.email } );
+        const user = await this.usersRepository.findOne( { email: loginUserDto.email }, { relations: [ 'filters' ] } );
         if ( !user ) {
             throw new HttpException( 'User is not find', HttpStatus.UNPROCESSABLE_ENTITY );
         }
@@ -52,7 +52,7 @@ export class UserService {
     }
 
     findUserById( id: number ): Promise<UserEntity> {
-        return this.usersRepository.findOne( id );
+        return this.usersRepository.findOne( id, { relations: [ 'filters' ] } );
     }
 
     async decodePassword( loginPassword: string, DBPassword: string ): Promise<boolean> {

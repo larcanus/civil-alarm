@@ -53,10 +53,25 @@
    ```
    {
       "user": {
-         "id"   : integer,
-         "name" : "name",
-         "email": "name@mail.jo",
-         "token": "unique-value"
+         "id"      : integer,
+         "name"    : "name",
+         "email"   : "name@mail.jo",
+         "filters" : [
+            {
+               "id"        : integer,
+               "name_1"    : string,
+               "filter_1"  : string,
+               "subject_1" : string,
+               "active_1"  : boolean,
+               "name_2"    : string,
+               "filter_2"  : string,
+               "subject_2" : string,
+               "active_2"  : boolean,
+               "created_at": timestapm,
+               "update_at" : timestapm
+            }
+         ],
+         "token" : "unique-value"
       }
    }
    ```
@@ -70,23 +85,30 @@
    <br/> where - *Headers*, type - `KEY:TOKEN`
    <br/>
    `Authorization`:`token <user-token>`
-   <br/>
-   <br/> where - *body*, type - `<json>`
-   ```
-   {
-      "user":{
-         "name":"name",
-         "email":"name@mail.jo",
-      }
-   }
-   ```
+   
    **resolve**
    ```
    {
       "user": {
-          "id"      : integer,
-          "name"    : "name",
-          "email"   : "name@mail.jo",
+         "id"      : integer,
+         "name"    : "name",
+         "email"   : "name@mail.jo",
+         "password": "hash-psw",
+         "filters" : [
+            {
+               "id"        : integer,
+               "name_1"    : string,
+               "filter_1"  : string,
+               "subject_1" : string,
+               "active_1"  : boolean,
+               "name_2"    : string,
+               "filter_2"  : string,
+               "subject_2" : string,
+               "active_2"  : boolean,
+               "created_at": timestapm,
+               "update_at" : timestapm
+            }
+          ],
           "token"   : "unique-value"
       }
    }
@@ -142,6 +164,8 @@
          "name_2"   : string,
          "filter_1" : string,
          "filter_2" : string
+         "subject_1": string
+         "subject_2": string
          "active_1" : boolean
          "active_2" : boolean
       }
@@ -151,16 +175,17 @@
    ```
    {
       "filters": {
-         "id"         : integer,
-         "name_1"     : string,
-         "name_2"     : string,
-         "filter_1"   : string,
+         "id"         : integer
+         "name_1"     : string
+         "name_2"     : string
+         "filter_1"   : string
          "filter_2"   : string
          "active_1"   : boolean
          "active_2"   : boolean
+         "subject_1"  : string
+         "subject_2"  : string
          "created_at" : timestamp
          "update_at"  : timestamp
-         "userId"     : integer
       }
    }
    ```

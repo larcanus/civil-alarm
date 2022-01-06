@@ -18,9 +18,13 @@ export class NoticeService {
     ) {
     }
 
+    async getNoticeByUserId( userId: number ): Promise<NoticeEntity[]> {
+        return this.noticeRepository.find( { where: [ { user: userId } ], order: { created_at: "DESC" }, take: 10 } );
+    }
+
     private readonly logger = new Logger( NoticeService.name );
 
-    @Cron( '23 * * * * *' )
+    @Cron( '60 * * * * *' )
     async handleCron() {
         this.logger.debug( 'Called when the current second is 23' );
         await this.mainRequester();
@@ -28,7 +32,7 @@ export class NoticeService {
 
     async mainRequester() {
         const activeUserFilters = await this.getAllActiveFilter();
-        console.log( activeUserFilters )
+
         for ( let i = 0; i < activeUserFilters.length; i++ ) {
             const filters = activeUserFilters[ i ];
             const { user } = filters;
