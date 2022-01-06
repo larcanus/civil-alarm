@@ -5,19 +5,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import config from '@app/ormconfig';
 import { UserModule } from '@app/user/user.module';
 import { AuthMiddleware } from '@app/middlewares/auth.middleware';
+import { FilterModule } from "@app/filter/filter.module";
+import { NoticeModule } from "@app/notice/notice.module";
 
-@Module({
-  imports: [TypeOrmModule.forRoot(config), UserModule],
-  controllers: [AppController],
-  providers: [AppService],
-})
+@Module( {
+    imports: [ TypeOrmModule.forRoot( config ), UserModule, FilterModule, NoticeModule ],
+    controllers: [ AppController ],
+    providers: [ AppService ],
+} )
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(
-      {
-        path: '*',
-        method: RequestMethod.ALL
-      }
-    );
-  }
+    configure( consumer: MiddlewareConsumer ) {
+        consumer.apply( AuthMiddleware ).forRoutes(
+            {
+                path: '*',
+                method: RequestMethod.ALL
+            }
+        );
+    }
 }
