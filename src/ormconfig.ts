@@ -2,7 +2,7 @@ import { ConnectionOptions } from 'typeorm';
 
 const config: ConnectionOptions = {
     type: 'postgres',
-    host: '45.128.206.159',
+    host: 'localhost', // 45.128.206.159 or civil.host for develop
     port: 5432,
     username: 'admin',
     password: '100',

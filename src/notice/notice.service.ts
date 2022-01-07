@@ -24,9 +24,9 @@ export class NoticeService {
 
     private readonly logger = new Logger( NoticeService.name );
 
-    @Cron( '60 * * * * *' )
+    @Cron( '0 23 * * * *' )
     async handleCron() {
-        this.logger.debug( 'Called when the current second is 60' );
+        // this.logger.debug( 'Called when the current hour is 23 minutes' );
         await this.mainRequester();
     }
 
