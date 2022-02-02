@@ -1,5 +1,13 @@
 ### Back-end API for service notification users
 
+<a href="http://nestjs.com/" target="blank">
+    <img src="https://nestjs.com/img/logo-small.svg" width="50" alt="Nest Logo" />
+</a>
+
+<a href="http://typeorm.io/">
+    <img src="https://github.com/typeorm/typeorm/raw/master/resources/logo_big.png" width="120" height="50">
+</a>
+
 ### build
 
 1. need: node + npm + yarn + nest = latest versions
