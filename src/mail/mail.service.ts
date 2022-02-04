@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from "@app/user/dto/createUser.dto";
-
 const nodemailer = require( 'nodemailer' );
 
 @Injectable()
@@ -19,7 +18,7 @@ export class MailService {
 
     async createTransporter() {
         return await nodemailer.createTransport( {
-            service: "Yandex",
+            service: 'Yandex',
             auth: {
                 user: this.config.address,
                 pass: this.config.pass,
@@ -43,6 +42,6 @@ export class MailService {
             html: templateRegister
         } );
 
-        console.log( "Message sent: %s", sendingInfo ); // TODO create and save into log
+        console.log( 'Message sent: %s', sendingInfo ); // TODO create and save into log
     }
 }
