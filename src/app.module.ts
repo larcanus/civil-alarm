@@ -7,9 +7,10 @@ import { UserModule } from '@app/user/user.module';
 import { AuthMiddleware } from '@app/middlewares/auth.middleware';
 import { FilterModule } from "@app/filter/filter.module";
 import { NoticeModule } from "@app/notice/notice.module";
+import { MailModule } from './mail/mail.module';
 
 @Module( {
-    imports: [ TypeOrmModule.forRoot( config ), UserModule, FilterModule, NoticeModule ],
+    imports: [ TypeOrmModule.forRoot( config ), UserModule, FilterModule, NoticeModule, MailModule ],
     controllers: [ AppController ],
     providers: [ AppService ],
 } )

@@ -9,35 +9,46 @@ import { UserResponseInterface, UserTypeLoginResponseInterface } from '@app/type
 import { LoginUserDto } from '@app/user/dto/loginUser.dto';
 import { compare, hash } from 'bcryptjs';
 import { UpdateUserDto } from '@app/user/dto/updateUser.dto';
+import { MailService } from "@app/mail/mail.service";
+
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository( UserEntity )
-        private readonly usersRepository: Repository<UserEntity> ) {
+        private readonly usersRepository: Repository<UserEntity>,
+        private readonly mailService: MailService ) {
     }
 
     async createUserData( createUserDto: CreateUserDto ): Promise<UserEntity> {
         const userByEmail = await this.usersRepository.findOne( { email: createUserDto.email } );
         const userByName = await this.usersRepository.findOne( { name: createUserDto.name } );
         if ( userByEmail || userByName ) {
-            throw new HttpException( 'Name or Email are already', HttpStatus.UNPROCESSABLE_ENTITY );
+            throw new HttpException( 'Имя или email уже используется', HttpStatus.UNPROCESSABLE_ENTITY );
         }
 
         const user = new UserEntity();
         Object.assign( user, createUserDto );
-        return await this.usersRepository.save( user );
+        const saveResult =  await this.usersRepository.save( user );
+
+        try {
+            await this.mailService.sentMailCreatingUser( createUserDto );
+        } catch ( er ) {
+            console.log( er ); // TODO create and save into log
+        }
+
+        return saveResult;
     }
 
     async loginUser( loginUserDto: LoginUserDto ): Promise<UserEntity> {
         const user = await this.usersRepository.findOne( { email: loginUserDto.email }, { relations: [ 'filters' ] } );
         if ( !user ) {
-            throw new HttpException( 'User is not find', HttpStatus.UNPROCESSABLE_ENTITY );
+            throw new HttpException( 'Такого пользователя не существует', HttpStatus.UNPROCESSABLE_ENTITY );
         }
 
         const isPasswordCorrect = await this.decodePassword( loginUserDto.password, user.password );
         if ( !isPasswordCorrect ) {
-            throw new HttpException( 'Password is not validate', HttpStatus.UNPROCESSABLE_ENTITY );
+            throw new HttpException( 'Пароль введен неверно', HttpStatus.UNPROCESSABLE_ENTITY );
         }
         return user;
     }

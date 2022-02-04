@@ -6,7 +6,7 @@ export class FilterEntity {
     @PrimaryGeneratedColumn( 'uuid' )
     id: string;
 
-    @Column( { default: '' } )
+    @Column( { default: 'фильтр №1' } )
     name_1: string;
 
     @Column( { default: '' } )
@@ -18,7 +18,7 @@ export class FilterEntity {
     @Column( { type: 'boolean' , default: true } )
     active_1: string;
 
-    @Column( { default: '' } )
+    @Column( { default: 'фильтр №2' } )
     name_2: string;
 
     @Column( { default: '' } )
