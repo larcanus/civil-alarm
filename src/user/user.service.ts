@@ -29,7 +29,7 @@ export class UserService {
 
         const user = new UserEntity();
         Object.assign( user, createUserDto );
-        const saveResult =  await this.usersRepository.save( user );
+        const saveResult = await this.usersRepository.save( user );
 
         try {
             await this.mailService.sentMailCreatingUser( createUserDto );
@@ -55,11 +55,25 @@ export class UserService {
 
     async updateUser( userId: number, updateUserDto: UpdateUserDto ): Promise<UserEntity> {
         const currentUser = await this.findUserById( userId );
+        const oldDataUser = Object.assign( new UserEntity(), currentUser );
+
         Object.assign( currentUser, updateUserDto );
         if ( updateUserDto.password ) {
             currentUser.password = await hash( updateUserDto.password, 10 );
         }
-        return await this.usersRepository.save( currentUser );
+        const saveResult = await this.usersRepository.save( currentUser );
+
+        try {
+            if ( oldDataUser.name !== updateUserDto.name ||
+                oldDataUser.email !== updateUserDto.email ||
+                updateUserDto.password ) {
+                await this.mailService.sentMailUpdatingUser( oldDataUser, updateUserDto );
+            }
+        } catch ( er ) {
+            console.log( er ); // TODO create and save into log
+        }
+
+        return saveResult;
     }
 
     findUserById( id: number ): Promise<UserEntity> {
