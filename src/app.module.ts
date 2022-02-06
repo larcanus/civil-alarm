@@ -8,9 +8,10 @@ import { AuthMiddleware } from '@app/middlewares/auth.middleware';
 import { FilterModule } from "@app/filter/filter.module";
 import { NoticeModule } from "@app/notice/notice.module";
 import { MailModule } from './mail/mail.module';
+import { LogModule } from './log/log.module';
 
 @Module( {
-    imports: [ TypeOrmModule.forRoot( config ), UserModule, FilterModule, NoticeModule, MailModule ],
+    imports: [ TypeOrmModule.forRoot( config ), UserModule, FilterModule, NoticeModule, MailModule, LogModule ],
     controllers: [ AppController ],
     providers: [ AppService ],
 } )

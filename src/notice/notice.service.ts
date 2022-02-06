@@ -9,12 +9,14 @@ import { Observable } from "rxjs";
 import { NoticeEntity } from "@app/entity/notice.entity";
 import { UserEntity } from "@app/entity/user.entity";
 import { MailService } from "@app/mail/mail.service";
+import { LogService } from "@app/log/log.service";
 
 @Injectable()
 export class NoticeService {
     constructor(
         private readonly http: HttpService,
         private readonly mailService: MailService,
+        private readonly logService: LogService,
         @InjectRepository( FilterEntity ) private readonly filterRepository: Repository<FilterEntity>,
         @InjectRepository( NoticeEntity ) private readonly noticeRepository: Repository<NoticeEntity>
     ) {
@@ -26,9 +28,9 @@ export class NoticeService {
 
     private readonly logger = new Logger( NoticeService.name );
 
-    @Cron( '0 23 * * * *' )
+    @Cron( '45 * * * * *' )
     async handleCron() {
-        // this.logger.debug( 'Called when the current hour is 23 minutes' );
+        this.logger.debug( 'Called when the current hour is 45 sec' );
         await this.mainRequester();
     }
 
@@ -144,8 +146,15 @@ export class NoticeService {
 
             try {
                 await this.mailService.sentMailNoticeUser( currentUser.email, nameFilter, searchResult.documents );
+                await this.logService.putLog( {
+                    userId: currentUser.id,
+                    record: `CREATE NOTICE :: ${ currentUser.name }`
+                } );
             } catch ( err ) {
-                console.log( 'sentMailNoticeUser---->', err ) //TODO into log
+                await this.logService.putLog( {
+                    userId: currentUser.id,
+                    record: `CREATE NOTICE ERROR SEND MAIL :: ${ err }`
+                } );
             }
 
         } else {

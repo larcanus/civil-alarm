@@ -10,6 +10,7 @@ import { LoginUserDto } from '@app/user/dto/loginUser.dto';
 import { compare, hash } from 'bcryptjs';
 import { UpdateUserDto } from '@app/user/dto/updateUser.dto';
 import { MailService } from "@app/mail/mail.service";
+import { LogService } from "@app/log/log.service";
 
 
 @Injectable()
@@ -17,7 +18,8 @@ export class UserService {
     constructor(
         @InjectRepository( UserEntity )
         private readonly usersRepository: Repository<UserEntity>,
-        private readonly mailService: MailService ) {
+        private readonly mailService: MailService,
+        private readonly logService: LogService ) {
     }
 
     async createUserData( createUserDto: CreateUserDto ): Promise<UserEntity> {
@@ -33,8 +35,9 @@ export class UserService {
 
         try {
             await this.mailService.sentMailCreatingUser( createUserDto );
+            await this.logService.putLog( { userId: user.id, record: `CREATE USER :: ${ user.name }` } );
         } catch ( er ) {
-            console.log( er ); // TODO create and save into log
+            await this.logService.putLog( { userId: user.id, record: `CREATE USER ERROR SEND MAIL :: ${ er }` } );
         }
 
         return saveResult;
@@ -50,6 +53,7 @@ export class UserService {
         if ( !isPasswordCorrect ) {
             throw new HttpException( 'Пароль введен неверно', HttpStatus.UNPROCESSABLE_ENTITY );
         }
+
         return user;
     }
 
@@ -68,9 +72,11 @@ export class UserService {
                 oldDataUser.email !== updateUserDto.email ||
                 updateUserDto.password ) {
                 await this.mailService.sentMailUpdatingUser( oldDataUser, updateUserDto );
+                await this.logService.putLog( { userId, record: `UPDATE USER :: ${ currentUser.name }` } );
+
             }
         } catch ( er ) {
-            console.log( er ); // TODO create and save into log
+            await this.logService.putLog( { userId, record: `UPDATE USER ERROR SEND MAIL :: ${ er }` } );
         }
 
         return saveResult;
