@@ -12,8 +12,8 @@ export function fillHtml( filter: string, documents ): string {
         <tr style="height: 23px; border: solid #d0e6f9;">
             <td style="width: 10%; height: 23px; ">
                 <h4><a href="https://bsr.sudrf.ru/bigs/portal.html">${ doc.name }</a></h4>
-                <p>${ doc.additionalFields[ 3 ] ? doc.additionalFields[ 3 ].value : 'нет данных' }</p>
-                <p>${ doc.additionalFields[ 4 ] ? doc.additionalFields[ 4 ].value : 'нет данных о суде' }</p>
+                <p>${ doc.additionalFields[ 3 ] && doc.additionalFields[ 3 ].value ? doc.additionalFields[ 3 ].value : 'нет данных' }</p>
+                <p>${ doc.additionalFields[ 4 ] && doc.additionalFields[ 4 ].value ? doc.additionalFields[ 4 ].value : 'нет данных о суде' }</p>
             </td>
         </tr>`
         trs += tr;
