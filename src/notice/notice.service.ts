@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from "@nestjs/typeorm";
@@ -8,11 +8,16 @@ import { AxiosResponse } from "axios";
 import { Observable } from "rxjs";
 import { NoticeEntity } from "@app/entity/notice.entity";
 import { UserEntity } from "@app/entity/user.entity";
+import { MailService } from "@app/mail/mail.service";
+import { LogService } from "@app/log/log.service";
+import { CRON_INTERVAL, FROM_DAY_REQUEST } from "@app/constants";
 
 @Injectable()
 export class NoticeService {
     constructor(
         private readonly http: HttpService,
+        private readonly mailService: MailService,
+        private readonly logService: LogService,
         @InjectRepository( FilterEntity ) private readonly filterRepository: Repository<FilterEntity>,
         @InjectRepository( NoticeEntity ) private readonly noticeRepository: Repository<NoticeEntity>
     ) {
@@ -22,11 +27,11 @@ export class NoticeService {
         return this.noticeRepository.find( { where: [ { user: userId } ], order: { created_at: "DESC" }, take: 10 } );
     }
 
-    private readonly logger = new Logger( NoticeService.name );
-
-    @Cron( '60 * * * * *' )
+    @Cron( CRON_INTERVAL )
     async handleCron() {
-        this.logger.debug( 'Called when the current second is 60' );
+        await this.logService.putLog( {
+            record: `STARTING handleCron()`
+        } );
         await this.mainRequester();
     }
 
@@ -39,20 +44,24 @@ export class NoticeService {
 
             if ( filters.active_1 ) {
                 const { filter_1, subject_1, name_1 } = filters;
-                ( await this.getNoticeByFilter( filter_1, subject_1 ) ).subscribe(
-                    ( response ) => {
-                        this.strokeNotice( response.data.searchResult, user, name_1 );
-                    },
-                )
+                setTimeout( async () => {
+                    ( await this.getNoticeByFilter( filter_1, subject_1 ) ).subscribe(
+                        ( response ) => {
+                            this.strokeNotice( response.data.searchResult, user, name_1 );
+                        },
+                    )
+                }, 10000 * i );
             }
 
             if ( filters.active_2 ) {
                 const { filter_2, subject_2, name_2 } = filters;
-                ( await this.getNoticeByFilter( filter_2, subject_2 ) ).subscribe(
-                    ( response ) => {
-                        this.strokeNotice( response.data.searchResult, user, name_2 );
-                    },
-                )
+                setTimeout( async () => {
+                    ( await this.getNoticeByFilter( filter_2, subject_2 ) ).subscribe(
+                        ( response ) => {
+                            this.strokeNotice( response.data.searchResult, user, name_2 );
+                        },
+                    )
+                }, 11000 * i );
             }
         }
     }
@@ -68,6 +77,8 @@ export class NoticeService {
         const https = require( 'https' );
         const { v4: uuidv4 } = require( 'uuid' );
         const date = new Date();
+        const currentDay = date.getDate();
+        date.setDate( currentDay - FROM_DAY_REQUEST );
         const subjectFilter = subject !== '' ? `{
             "name": "case_doc_subject_rf",
             "operator": "EX",
@@ -93,7 +104,7 @@ export class NoticeService {
                         {
                             "type": "Q",
                             "request": `{"mode":"EXTENDED","typeRequests":[{"fieldRequests":[
-                            {"name":"case_user_doc_entry_date","operator":"B","query":"2021-01-05T18:47:23.134Z","fieldName":"case_user_doc_entry_date"},
+                            {"name":"case_user_doc_entry_date","operator":"B","query":"${date.toISOString()}","sQuery":"${new Date().toISOString()}","fieldName":"case_user_doc_entry_date"},
                             ${ subjectFilter }],
                             "mode":"AND","name":"common","typesMode":"AND"}]}`,
                             "operator": "AND",
@@ -102,7 +113,7 @@ export class NoticeService {
                     ]
                 },
                 "sorts": [ { "field": "score", "order": "desc" } ],
-                "simpleSearchFieldsBundle": "default",
+                "simpleSearchFieldsBundle": "all",
                 "noOrpho": false,
                 "start": 0,
                 "rows": 10,
@@ -123,7 +134,6 @@ export class NoticeService {
         };
 
         const dataJson = JSON.stringify( data );
-
         return this.http.post( "https://bsr.sudrf.ru/bigs/s.action", dataJson,
             {
                 headers: headersRequest,
@@ -133,8 +143,22 @@ export class NoticeService {
 
     async strokeNotice( searchResult: any, currentUser: UserEntity, nameFilter: string ) {
         const newNotice = new NoticeEntity();
-        if ( searchResult && searchResult?.documents && searchResult?.documents.length > 0 ) {
+        if ( searchResult && searchResult.documents && searchResult?.documents.length > 0 ) {
             newNotice.documents = JSON.stringify( searchResult.documents );
+
+            try {
+                await this.mailService.sentMailNoticeUser( currentUser.email, nameFilter, searchResult.documents );
+                await this.logService.putLog( {
+                    userId: currentUser.id,
+                    record: `CREATE NOTICE :: ${ currentUser.name }`
+                } );
+            } catch ( err ) {
+                await this.logService.putLog( {
+                    userId: currentUser.id,
+                    record: `CREATE NOTICE ERROR SEND MAIL :: ${ err }`
+                } );
+            }
+
         } else {
             newNotice.documents = '';
         }

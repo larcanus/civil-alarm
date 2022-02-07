@@ -9,46 +9,77 @@ import { UserResponseInterface, UserTypeLoginResponseInterface } from '@app/type
 import { LoginUserDto } from '@app/user/dto/loginUser.dto';
 import { compare, hash } from 'bcryptjs';
 import { UpdateUserDto } from '@app/user/dto/updateUser.dto';
+import { MailService } from "@app/mail/mail.service";
+import { LogService } from "@app/log/log.service";
+
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository( UserEntity )
-        private readonly usersRepository: Repository<UserEntity> ) {
+        private readonly usersRepository: Repository<UserEntity>,
+        private readonly mailService: MailService,
+        private readonly logService: LogService ) {
     }
 
     async createUserData( createUserDto: CreateUserDto ): Promise<UserEntity> {
         const userByEmail = await this.usersRepository.findOne( { email: createUserDto.email } );
         const userByName = await this.usersRepository.findOne( { name: createUserDto.name } );
         if ( userByEmail || userByName ) {
-            throw new HttpException( 'Name or Email are already', HttpStatus.UNPROCESSABLE_ENTITY );
+            throw new HttpException( 'Имя или email уже используется', HttpStatus.UNPROCESSABLE_ENTITY );
         }
 
         const user = new UserEntity();
         Object.assign( user, createUserDto );
-        return await this.usersRepository.save( user );
+        const saveResult = await this.usersRepository.save( user );
+
+        try {
+            await this.mailService.sentMailCreatingUser( createUserDto );
+            await this.logService.putLog( { userId: user.id, record: `CREATE USER :: ${ user.name }` } );
+        } catch ( er ) {
+            await this.logService.putLog( { userId: user.id, record: `CREATE USER ERROR SEND MAIL :: ${ er }` } );
+        }
+
+        return saveResult;
     }
 
     async loginUser( loginUserDto: LoginUserDto ): Promise<UserEntity> {
         const user = await this.usersRepository.findOne( { email: loginUserDto.email }, { relations: [ 'filters' ] } );
         if ( !user ) {
-            throw new HttpException( 'User is not find', HttpStatus.UNPROCESSABLE_ENTITY );
+            throw new HttpException( 'Такого пользователя не существует', HttpStatus.UNPROCESSABLE_ENTITY );
         }
 
         const isPasswordCorrect = await this.decodePassword( loginUserDto.password, user.password );
         if ( !isPasswordCorrect ) {
-            throw new HttpException( 'Password is not validate', HttpStatus.UNPROCESSABLE_ENTITY );
+            throw new HttpException( 'Пароль введен неверно', HttpStatus.UNPROCESSABLE_ENTITY );
         }
+
         return user;
     }
 
     async updateUser( userId: number, updateUserDto: UpdateUserDto ): Promise<UserEntity> {
         const currentUser = await this.findUserById( userId );
+        const oldDataUser = Object.assign( new UserEntity(), currentUser );
+
         Object.assign( currentUser, updateUserDto );
         if ( updateUserDto.password ) {
             currentUser.password = await hash( updateUserDto.password, 10 );
         }
-        return await this.usersRepository.save( currentUser );
+        const saveResult = await this.usersRepository.save( currentUser );
+
+        try {
+            if ( oldDataUser.name !== updateUserDto.name ||
+                oldDataUser.email !== updateUserDto.email ||
+                updateUserDto.password ) {
+                await this.mailService.sentMailUpdatingUser( oldDataUser, updateUserDto );
+                await this.logService.putLog( { userId, record: `UPDATE USER :: ${ currentUser.name }` } );
+
+            }
+        } catch ( er ) {
+            await this.logService.putLog( { userId, record: `UPDATE USER ERROR SEND MAIL :: ${ er }` } );
+        }
+
+        return saveResult;
     }
 
     findUserById( id: number ): Promise<UserEntity> {
