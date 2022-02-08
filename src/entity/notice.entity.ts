@@ -12,7 +12,7 @@ export class NoticeEntity {
     @Column( { type: 'jsonb', array: false } )
     documents!: string;
 
-    @Column( { type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' } )
+    @Column( { type: 'timestamp without time zone', default: () => 'CURRENT_TIMESTAMP' } )
     created_at: Date;
 
     @ManyToOne( () => UserEntity, user => user.filters,

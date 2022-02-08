@@ -30,10 +30,10 @@ export class FilterEntity {
     @Column( { type: 'boolean' , default: true }  )
     active_2: string;
 
-    @Column( { type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' } )
+    @Column( { type: 'timestamp without time zone', default: () => 'CURRENT_TIMESTAMP' } )
     created_at: Date;
 
-    @Column( { type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' } )
+    @Column( { type: 'timestamp without time zone', default: () => 'CURRENT_TIMESTAMP' } )
     update_at: Date;
 
     @BeforeUpdate()
