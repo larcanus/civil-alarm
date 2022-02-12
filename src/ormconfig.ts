@@ -5,7 +5,7 @@ const config: ConnectionOptions = {
     host: 'localhost', // 45.128.206.159 or civil.host for develop
     port: 5432,
     username: 'admin',
-    password: '100',
+    password: '*',
     database: 'civilalarm',
     schema: 'production',
     synchronize: false,
