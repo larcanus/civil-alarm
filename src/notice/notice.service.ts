@@ -79,6 +79,8 @@ export class NoticeService {
         const date = new Date();
         const currentDay = date.getDate();
         date.setDate( currentDay - FROM_DAY_REQUEST );
+        const dateFrom = date.toISOString().substring( 0, 11 );
+        const dateTo = new Date().toISOString().substring( 0, 11 );
         const subjectFilter = subject !== '' ? `{
             "name": "case_doc_subject_rf",
             "operator": "EX",
@@ -104,7 +106,7 @@ export class NoticeService {
                         {
                             "type": "Q",
                             "request": `{"mode":"EXTENDED","typeRequests":[{"fieldRequests":[
-                            {"name":"case_user_doc_entry_date","operator":"B","query":"${date.toISOString()}","sQuery":"${new Date().toISOString()}","fieldName":"case_user_doc_entry_date"},
+                            {"name":"case_user_doc_entry_date","operator":"B","query":"${ dateFrom }00:00:00","sQuery":"${ dateTo }00:00:00","fieldName":"case_user_doc_entry_date"},
                             ${ subjectFilter }],
                             "mode":"AND","name":"common","typesMode":"AND"}]}`,
                             "operator": "AND",
@@ -134,6 +136,7 @@ export class NoticeService {
         };
 
         const dataJson = JSON.stringify( data );
+        console.log( dataJson )
         return this.http.post( "https://bsr.sudrf.ru/bigs/s.action", dataJson,
             {
                 headers: headersRequest,
